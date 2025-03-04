@@ -10,33 +10,32 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import ru.yandex.practicum.catsgram.model.Post;
-import ru.yandex.practicum.catsgram.service.PostService;
+import ru.yandex.practicum.catsgram.model.User;
+import ru.yandex.practicum.catsgram.service.UserService;
 
 @RestController
-@RequestMapping("/posts")
-public class PostController {
+@RequestMapping("/users")
+public class UserController {
 
-	private final PostService postService;
+	private final UserService userService;
 
 	@Autowired
-	public PostController(PostService postService) {
-		this.postService = postService;
+	public UserController(UserService userService) {
+		this.userService = userService;
 	}
 
 	@PostMapping
-	public Post doPost(@RequestBody Post post) {
-		return postService.create(post);
+	public User doPost(@RequestBody User user) {
+		return userService.create(user);
 	}
 
 	@GetMapping
-	public Collection<Post> doGet() {
-		return postService.findAll();
+	public Collection<User> doGet() {
+		return userService.findAll();
 	}
 
 	@PutMapping
-	public Post doPut(@RequestBody Post newPost) {
-		return postService.update(newPost);
+	public User doPut(@RequestBody User newUser) {
+		return userService.update(newUser);
 	}
-
 }
