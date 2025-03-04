@@ -18,10 +18,10 @@ public class UserService {
 
 	private final Map<Long, User> users = new HashMap<>();
 
-	public User create(User user) {
+	public User create(final User user) {
 		if (user == null || user.getEmail().isBlank())
 			throw new ConditionsNotMetException("Имейл должен быть указан");
-		String email = user.getEmail();
+		final String email = user.getEmail();
 		if (!users.isEmpty() && users.values().stream().anyMatch(u -> u.getEmail().equals(email)))
 			throw new DuplicatedDataException("Этот имейл уже используется");
 		user.setId(nextId());
@@ -34,7 +34,7 @@ public class UserService {
 		return users.values();
 	}
 
-	public User update(User newUser) {
+	public User update(final User newUser) {
 		if (newUser == null || newUser.getId() == null)
 			throw new ConditionsNotMetException("Id должен быть указан");
 		if (users.containsKey(newUser.getId())) {
@@ -56,10 +56,19 @@ public class UserService {
 		throw new NotFoundException(String.format("Пользователь с id = %d не найден", newUser.getId()));
 	}
 
-	public Optional<User> findUserById(Long id) {
-		Optional<User> user = users.entrySet().stream().filter(e -> e.getKey().equals(id)).findFirst()
-				.map(e -> e.getValue());
+	public User findUserById(final Long id) {
+		final User user = users.get(id);
+		if (user == null)
+			throw new NotFoundException(String.format("Пользователь с id = %d не найден", id));
 		return user;
+	}
+
+	public User findUserByEmail(final String email) {
+		final Optional<User> optionalUser = users.entrySet().stream().filter(e -> e.getValue().getEmail().equals(email))
+				.findFirst().map(e -> e.getValue());
+		if (optionalUser.isEmpty())
+			throw new NotFoundException(String.format("Пользователь с %s не найден", email));
+		return optionalUser.get();
 	}
 
 	private Long nextId() {
