@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import ru.yandex.practicum.catsgram.exception.ConditionsNotMetException;
 import ru.yandex.practicum.catsgram.exception.NotFoundException;
 import ru.yandex.practicum.catsgram.model.Post;
+import ru.yandex.practicum.catsgram.util.Direction;
 
 @RequiredArgsConstructor
 @Service
@@ -20,7 +21,7 @@ public class PostService {
 	private final Map<Long, Post> posts = new LinkedHashMap<>();
 
 	public Collection<Post> findAll(final String order, final Integer from, final Integer size) {
-		if (order.equals("desc"))
+		if (order.equals(Direction.FROM_THE_END))
 			return posts.entrySet().stream().sorted((a, b) -> Long.compare(b.getKey(), a.getKey())).skip(from)
 					.limit(size).map(e -> e.getValue()).toList();
 		return posts.entrySet().stream().skip(from).limit(size).map(e -> e.getValue()).toList();
