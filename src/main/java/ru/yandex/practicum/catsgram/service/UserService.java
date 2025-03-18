@@ -44,14 +44,8 @@ public class UserService {
 				if (!users.isEmpty() && users.values().stream().anyMatch(u -> u.getEmail().equals(email)))
 					throw new DuplicatedDataException("Этот имейл уже используется");
 			}
-			if (newUser.getEmail() != null)
-				user.setEmail(newUser.getEmail());
-			if (newUser.getPassword() != null)
-				user.setPassword(newUser.getPassword());
-			if (newUser.getUsername() != null)
-				user.setUsername(newUser.getUsername());
-			users.put(user.getId(), user);
-			return user;
+			users.put(newUser.getId(), newUser);
+			return newUser;
 		}
 		throw new NotFoundException(String.format("Пользователь с id: %d не найден", newUser.getId()));
 	}

@@ -25,7 +25,7 @@ import ru.yandex.practicum.catsgram.service.ImageService;
 public class ImageController {
 	private final ImageService imageService;
 
-	@GetMapping("/posts/{postId/images}")
+	@GetMapping("/posts/{postId}/images")
 	public Collection<Image> getImagesInfoByPostId(@PathVariable final Long postId) {
 		return imageService.getImagesInfoByPostId(postId);
 	}
