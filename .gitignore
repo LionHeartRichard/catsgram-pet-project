@@ -31,3 +31,4 @@ hs_err_pid*
 /target/
 /compose/
 /volumes/
+/src/main/resources/
