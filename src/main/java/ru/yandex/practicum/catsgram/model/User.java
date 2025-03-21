@@ -15,7 +15,7 @@ import jakarta.validation.constraints.PastOrPresent;
 @Validated
 @Data
 @Builder(toBuilder = true)
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = {"email"})
 public class User {
 	private Long id;
 	@Login
