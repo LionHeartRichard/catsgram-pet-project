@@ -28,15 +28,9 @@ public class RepoFind<T> {
 		return Optional.ofNullable(ans);
 	}
 
-	public Collection<T> byStringParam(String param, String nameTable, String nameParam, Collection<T> typeAns) {
+	public Collection<T> byStringParam(String param, String nameTable, String nameParam, Collection<T> collection) {
 		String query = String.format("SELECT * FROM %s WHERE %s=?", nameTable, nameParam);
-		typeAns = jdbc.query(query, rowMapper, param);
-		return typeAns;
-	}
-
-	public Collection<T> all(String nameTable, Collection<T> typrAns) {
-		String query = String.format("SELECT * FROM %s", nameTable);
-		typrAns = jdbc.query(query, rowMapper);
-		return typrAns;
+		collection = jdbc.query(query, rowMapper, param);
+		return collection;
 	}
 }
