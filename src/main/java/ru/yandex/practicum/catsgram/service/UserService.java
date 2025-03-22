@@ -8,66 +8,27 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import lombok.RequiredArgsConstructor;
+import ru.yandex.practicum.catsgram.dal.impl.UserRepositories;
+import ru.yandex.practicum.catsgram.dto.UserDto;
 import ru.yandex.practicum.catsgram.exception.ConditionsNotMetException;
 import ru.yandex.practicum.catsgram.exception.DuplicatedDataException;
 import ru.yandex.practicum.catsgram.exception.NotFoundException;
 import ru.yandex.practicum.catsgram.model.User;
+import ru.yandex.practicum.catsgram.util.MapperUtil;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
-	private final Map<Long, User> users = new HashMap<>();
+	private final UserRepositories userRepository;
 
-	public User create(final User user) {
-		if (user == null || user.getEmail().isBlank())
-			throw new ConditionsNotMetException("Имейл должен быть указан");
-		final String email = user.getEmail();
-		if (!users.isEmpty() && users.values().stream().anyMatch(u -> u.getEmail().equals(email)))
-			throw new DuplicatedDataException("Этот имейл уже используется");
-		user.setId(nextId());
-		user.setRegistrationDate(Instant.now());
-		users.put(user.getId(), user);
-		return user;
+	public Collection<UserDto> findAll() {
+		return userRepository.findAll().stream().map(MapperUtil::mappToUserDto).toList();
 	}
 
-	public Collection<User> findAll() {
-		return users.values();
-	}
-
-	public User update(final User newUser) {
-		if (newUser == null || newUser.getId() == null)
-			throw new ConditionsNotMetException("Id должен быть указан");
-		if (users.containsKey(newUser.getId())) {
-			User user = users.get(newUser.getId());
-			if (!user.getEmail().equals(newUser.getEmail())) {
-				String email = newUser.getEmail();
-				if (!users.isEmpty() && users.values().stream().anyMatch(u -> u.getEmail().equals(email)))
-					throw new DuplicatedDataException("Этот имейл уже используется");
-			}
-			users.put(newUser.getId(), newUser);
-			return newUser;
-		}
-		throw new NotFoundException(String.format("Пользователь с id: %d не найден", newUser.getId()));
-	}
-
-	public User findUserById(final Long id) {
-		final User user = users.get(id);
-		if (user == null)
-			throw new NotFoundException(String.format("Пользователь с id: %d не найден", id));
-		return user;
-	}
-
-	public User findUserByEmail(final String email) {
-		final Optional<User> optionalUser = users.entrySet().stream().filter(e -> e.getValue().getEmail().equals(email))
-				.findFirst().map(e -> e.getValue());
-		if (optionalUser.isEmpty())
-			throw new NotFoundException(String.format("Пользователь с %s не найден", email));
-		return optionalUser.get();
-	}
-
-	private Long nextId() {
-		Long id = users.keySet().stream().mapToLong(k -> k).max().orElse(0);
-		return ++id;
+	public Optional<User> findById(final Long id) {
+		return userRepository.findById(id);
 	}
 
 }

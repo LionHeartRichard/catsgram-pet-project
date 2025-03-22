@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import ru.yandex.practicum.catsgram.dto.UserDto;
 import ru.yandex.practicum.catsgram.exception.ParameterNotValidException;
 import ru.yandex.practicum.catsgram.model.User;
 import ru.yandex.practicum.catsgram.service.UserService;
@@ -29,35 +30,11 @@ public class UserController {
 	private final UserService userService;
 	private final LocalValidator validator;
 
-	@ResponseStatus(HttpStatus.CREATED)
-	@PostMapping
-	public User create(@Valid @RequestBody final User user) {
-		log.trace("query client: POST /users, user ={}", user.toString());
-		return userService.create(user);
-	}
-
+	@ResponseStatus(HttpStatus.OK)
 	@GetMapping
-	public Collection<User> findAll() {
+	public Collection<UserDto> findAll() {
 		log.trace("query client: GET /users, FIND ALL");
 		return userService.findAll();
 	}
 
-	@PutMapping
-	public User update(@Valid @RequestBody final User user) {
-		log.trace("query client: PUT /users, user = ", user.toString());
-		return userService.update(user);
-	}
-
-	@GetMapping("/{id}")
-	public User findUserById(@PathVariable final Long id) {
-		log.trace("query client: GET /users/id, id = {}", id);
-		validator.validIndex(id).orElseThrow(() -> new ParameterNotValidException("id", "not positive value"));
-		return userService.findUserById(id);
-	}
-
-	@GetMapping("/{email}")
-	public User findUserByEmail(@PathVariable final String email) {
-		log.trace("query client: GET /users/email, email = {}", email);
-		return userService.findUserByEmail(email);
-	}
 }

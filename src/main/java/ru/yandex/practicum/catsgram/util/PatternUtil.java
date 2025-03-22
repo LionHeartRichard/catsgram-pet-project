@@ -1,6 +1,6 @@
 package ru.yandex.practicum.catsgram.util;
 
-public final class PatternApi {
+public final class PatternUtil {
 	public static final String ONE_DIGIT = "(?=.*[0-9])";
 	public static final String LOWER_CASE = "(?=.*[a-z])";
 	public static final String UPPER_CASE = "(?=.*[A-Z])";

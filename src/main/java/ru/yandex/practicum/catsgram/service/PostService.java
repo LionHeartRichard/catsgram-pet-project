@@ -28,11 +28,11 @@ public class PostService {
 	}
 
 	public Post create(final Post post) {
-
 		if (post.getDescription() == null || post.getDescription().isBlank()) {
 			throw new ConditionsNotMetException("Описание не может быть пустым");
 		}
-		userService.findUserById(post.getAuthorId());
+		userService.findById(post.getAuthorId())
+				.orElseThrow(() -> new NotFoundException("is author not found in database!!!"));
 		post.setId(nextId());
 		post.setPostDate(Instant.now());
 		posts.put(post.getId(), post);
