@@ -13,5 +13,5 @@ public interface Dao<T> {
 
 	Optional<Integer> delete(T t);
 
-	Optional<T> findById(Long id);
+	Optional<T> findUserById(Long id);
 }

@@ -37,7 +37,7 @@ public class UserDao implements Dao<User> {
 	@Override
 	public Collection<User> read() {
 		log.trace("Begin work: read, table={}", TABLE_NAME);
-		return repoCrud.read(TABLE_NAME, new ArrayList<User>());
+		return repoFind.findAll(TABLE_NAME, new ArrayList<User>());
 	}
 
 	@Override
@@ -54,7 +54,7 @@ public class UserDao implements Dao<User> {
 	}
 
 	@Override
-	public Optional<User> findById(Long id) {
+	public Optional<User> findUserById(Long id) {
 		log.trace("Begin work: fingById, table={}, userId={}", TABLE_NAME, id);
 		return repoFind.byId(id, TABLE_NAME);
 	}

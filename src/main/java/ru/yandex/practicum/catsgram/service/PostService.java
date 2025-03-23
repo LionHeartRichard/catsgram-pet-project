@@ -8,6 +8,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import ru.yandex.practicum.catsgram.dal.impl.UserDao;
 import ru.yandex.practicum.catsgram.exception.ConditionsNotMetException;
 import ru.yandex.practicum.catsgram.exception.NotFoundException;
 import ru.yandex.practicum.catsgram.model.Post;
@@ -17,7 +18,7 @@ import ru.yandex.practicum.catsgram.util.Direction;
 @Service
 public class PostService {
 
-	private final UserService userService;
+	private final UserDao userDao;
 	private final Map<Long, Post> posts = new LinkedHashMap<>();
 
 	public Collection<Post> findAll(final String order, final Integer from, final Integer size) {
@@ -31,8 +32,8 @@ public class PostService {
 		if (post.getDescription() == null || post.getDescription().isBlank()) {
 			throw new ConditionsNotMetException("Описание не может быть пустым");
 		}
-		userService.findById(post.getAuthorId())
-				.orElseThrow(() -> new NotFoundException("is author not found in database!!!"));
+		userDao.findUserById(post.getAuthorId())
+				.orElseThrow(() -> new NotFoundException("Author this post, not found!!!"));
 		post.setId(nextId());
 		post.setPostDate(Instant.now());
 		posts.put(post.getId(), post);
