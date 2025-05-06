@@ -1,4 +1,5 @@
 package ru.yandex.practicum.catsgram.dto;
 
-public interface Dto {
+public class UpdateUserRequest {
+
 }
