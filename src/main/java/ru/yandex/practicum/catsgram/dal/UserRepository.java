@@ -24,7 +24,7 @@ public class UserRepository extends BaseRepository<User> {
 		super(jdbc, mapper);
 	}
 
-	public List<User> findByAll() {
+	public List<User> findAll() {
 		return findMany(FIND_ALL_QUERY);
 	}
 

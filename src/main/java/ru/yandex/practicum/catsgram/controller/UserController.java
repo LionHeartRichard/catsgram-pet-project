@@ -1,7 +1,6 @@
 package ru.yandex.practicum.catsgram.controller;
 
-import java.util.Collection;
-import java.util.Optional;
+import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,8 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ru.yandex.practicum.catsgram.dto.impl.UserDto;
-import ru.yandex.practicum.catsgram.model.User;
+import ru.yandex.practicum.catsgram.dto.NewUserRequest;
+import ru.yandex.practicum.catsgram.dto.UpdateUserRequest;
+import ru.yandex.practicum.catsgram.dto.UserDto;
 import ru.yandex.practicum.catsgram.service.UserService;
 import ru.yandex.practicum.catsgram.validation.LocalValidator;
 
@@ -32,24 +32,24 @@ public class UserController {
 
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping
-	public Collection<UserDto> findAll() {
+	public List<UserDto> findAll() {
 		log.trace("query client: GET /users, FIND ALL");
-		return userService.findAll();
+		return userService.getUsers();
 	}
 
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping
-	public UserDto createUser(@Valid @RequestBody User user) {
+	public UserDto createUser(@Valid @RequestBody NewUserRequest newUserRequest) {
 		log.trace("query clients: POST /users, CREATE USER");
-		return userService.createUser(user);
+		return userService.createUser(newUserRequest);
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@PutMapping("/{user_id}")
-	public UserDto updateUser(@PathVariable("user_id") Long userId, @RequestBody UserDto dto) {
+	public UserDto updateUser(@PathVariable("user_id") Long userId, @RequestBody UpdateUserRequest updateUserRequest) {
 		log.trace("query clients: PUT/user_id, UPDATE USER");
 		validator.validIndex(userId);
-		return userService.updateUser(userId, Optional.ofNullable(dto));
+		return userService.updateUser(userId, updateUserRequest);
 	}
 
 	@ResponseStatus(HttpStatus.OK)
@@ -57,7 +57,7 @@ public class UserController {
 	public UserDto findUserById(@PathVariable("user_id") Long userId) {
 		log.trace("query clients: GET/user_id, FIND USER BY ID");
 		validator.validIndex(userId);
-		return userService.findUserById(userId);
+		return userService.getUserById(userId);
 	}
 
 }
