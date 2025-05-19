@@ -13,14 +13,13 @@ import ru.yandex.practicum.catsgram.validation.Password;
 @Validated
 @Data
 public class NewUserRequest {
-	private Long id;
 	@Login
-	private String login;
-	private String name;
+	private final String login;
+	private final String name;
 	@Email
-	private String email;
+	private final String email;
 	@Password
-	private String password;
+	private final String password;
 	@PastOrPresent
-	private Instant registrationDate;
+	private final Instant registrationDate;
 }

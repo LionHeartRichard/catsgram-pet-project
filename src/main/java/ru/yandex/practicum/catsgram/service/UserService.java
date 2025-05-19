@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import ru.yandex.practicum.catsgram.dal.UserRepository;
 import ru.yandex.practicum.catsgram.dto.NewUserRequest;
 import ru.yandex.practicum.catsgram.dto.UpdateUserRequest;
-import ru.yandex.practicum.catsgram.dto.UserDto;
 import ru.yandex.practicum.catsgram.dto.mapper.UserMapper;
 import ru.yandex.practicum.catsgram.exception.ConditionsNotMetException;
 import ru.yandex.practicum.catsgram.exception.DuplicatedDataException;
@@ -24,7 +23,7 @@ public class UserService {
 
 	private final UserRepository userRepository;
 
-	public UserDto createUser(NewUserRequest request) {
+	public User createUser(NewUserRequest request) {
 		if (request.getEmail() == null || request.getEmail().isEmpty()) {
 			throw new ConditionsNotMetException("Имейл должен быть указан");
 		}
@@ -38,22 +37,22 @@ public class UserService {
 
 		user = userRepository.save(user);
 
-		return UserMapper.mapToUserDto(user);
+		return user;
 	}
 
-	public UserDto getUserById(Long userId) {
-		return userRepository.findById(userId).map(UserMapper::mapToUserDto)
+	public User getUserById(Long userId) {
+		return userRepository.findById(userId)
 				.orElseThrow(() -> new NotFoundException("Пользователь не найден с ID: " + userId));
 	}
 
-	public List<UserDto> getUsers() {
-		return userRepository.findAll().stream().map(UserMapper::mapToUserDto).collect(Collectors.toList());
+	public List<User> getUsers() {
+		return userRepository.findAll().stream().collect(Collectors.toList());
 	}
 
-	public UserDto updateUser(Long userId, UpdateUserRequest request) {
+	public User updateUser(Long userId, UpdateUserRequest request) {
 		User updatedUser = userRepository.findById(userId).map(user -> UserMapper.updateUserFields(user, request))
 				.orElseThrow(() -> new NotFoundException("Пользователь не найден"));
 		updatedUser = userRepository.update(updatedUser);
-		return UserMapper.mapToUserDto(updatedUser);
+		return updatedUser;
 	}
 }

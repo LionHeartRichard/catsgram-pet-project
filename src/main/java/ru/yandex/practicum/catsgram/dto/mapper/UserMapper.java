@@ -4,7 +4,6 @@ import java.time.Instant;
 
 import ru.yandex.practicum.catsgram.dto.NewUserRequest;
 import ru.yandex.practicum.catsgram.dto.UpdateUserRequest;
-import ru.yandex.practicum.catsgram.dto.UserDto;
 import ru.yandex.practicum.catsgram.model.User;
 
 public class UserMapper {
@@ -18,17 +17,6 @@ public class UserMapper {
 		user.setRegistrationDate(Instant.now());
 
 		return user;
-	}
-
-	public static UserDto mapToUserDto(User user) {
-		UserDto dto = new UserDto();
-		dto.setId(user.getId());
-		dto.setLogin(user.getLogin());
-		dto.setName(user.getName());
-		dto.setEmail(user.getEmail());
-		dto.setRegistrationDate(Instant.now());
-
-		return dto;
 	}
 
 	public static User updateUserFields(User user, UpdateUserRequest request) {

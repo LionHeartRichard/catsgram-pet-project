@@ -15,12 +15,12 @@ public class UserRowMapper implements RowMapper<User> {
 	@Override
 	public User mapRow(ResultSet rs, int rowNum) throws SQLException {
 		Timestamp registrationDate = rs.getTimestamp("registration_date");
-		User user = User.builder()
-				.id(rs.getLong("id"))
-				.login(rs.getString("login"))
-				.name(rs.getString("name"))
-				.email(rs.getString("email")).password(rs.getString("password"))
-				.registrationDate(registrationDate.toInstant()).build();
+		User user = new User(rs.getLong("id"),
+				rs.getString("login"),
+				rs.getString("name"),
+				rs.getString("email"),
+				rs.getString("password"),
+				registrationDate.toInstant());
 		return user;
 	}
 
