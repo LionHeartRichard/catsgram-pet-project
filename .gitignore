@@ -29,3 +29,6 @@ java-kanban.iml
 hs_err_pid*
 /bin/
 /target/
+/compose/
+/volumes/
+/src/main/resources/

@@ -1,64 +1,57 @@
 package ru.yandex.practicum.catsgram.controller;
 
-import java.time.Instant;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import ru.yandex.practicum.catsgram.exception.ConditionsNotMetException;
-import ru.yandex.practicum.catsgram.exception.NotFoundException;
+import lombok.RequiredArgsConstructor;
+import ru.yandex.practicum.catsgram.exception.ParameterNotValidException;
 import ru.yandex.practicum.catsgram.model.Post;
+import ru.yandex.practicum.catsgram.service.PostService;
+import ru.yandex.practicum.catsgram.util.Direction;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/posts")
 public class PostController {
 
-	private final Map<Long, Post> posts = new HashMap<>();
+	private final PostService postService;
 
-	@GetMapping
-	public Collection<Post> findAll() {
-		return posts.values();
+	@ResponseStatus(HttpStatus.CREATED)
+	@PostMapping
+	public Post create(@RequestBody final Post post) {
+		return postService.create(post);
 	}
 
-	@PostMapping
-	public Post create(@RequestBody Post post) {
-		if (post == null || post.getDescription().isBlank()) {
-			throw new ConditionsNotMetException("Описание не может быть пустым");
-		}
-
-		post.setId(getNextId());
-		post.setPostDate(Instant.now());
-		posts.put(post.getId(), post);
-		return post;
+	@GetMapping
+	public Collection<Post> findAll(@RequestParam(defaultValue = Direction.AT_FIRST) String order,
+			@RequestParam(defaultValue = "0") Integer from, @RequestParam(defaultValue = "10") Integer size) {
+		if (!order.equals(Direction.AT_FIRST) && !order.equals(Direction.FROM_THE_END))
+			throw new ParameterNotValidException("sort", "должен содержать корректное значение!");
+		if (size <= 0)
+			throw new ParameterNotValidException("size", "должен быть больше нуля!");
+		if (from < 0)
+			throw new ParameterNotValidException("from", "не может быть меньше нуля");
+		return postService.findAll(order, from, size);
 	}
 
 	@PutMapping
-	public Post update(@RequestBody Post newPost) {
-		if (newPost.getId() == null) {
-			throw new ConditionsNotMetException("Id должен быть указан");
-		}
-		if (newPost == null || newPost.getDescription().isBlank()) {
-			throw new ConditionsNotMetException("Описание не может быть пустым");
-		}
-		if (posts.containsKey(newPost.getId())) {
-			Post post = posts.get(newPost.getId());
-			post.setDescription(newPost.getDescription());
-			return post;
-		}
-		throw new NotFoundException("Пост с id = " + newPost.getId() + " не найден");
+	public Post update(@RequestBody final Post newPost) {
+		return postService.update(newPost);
 	}
 
-	// метод будет отрабатывать долго - лучше хранить в памяти последний
-	// сгенерированный ид?!
-	private Long getNextId() {
-		Long currentMaxId = posts.keySet().stream().mapToLong(id -> id).max().orElse(0);
-		return ++currentMaxId;
+	@GetMapping("/{id}")
+	public Post findPostById(@PathVariable Long id) {
+		return postService.findPostById(id);
 	}
+
 }

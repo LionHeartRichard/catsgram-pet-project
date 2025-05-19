@@ -1,14 +1,24 @@
 package ru.yandex.practicum.catsgram.model;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.NonNull;
+import java.time.Instant;
 
-@Data
-@Builder(toBuilder = true)
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode(of = {"email"})
 public class User {
-	@NonNull
-	private Details details;
-	@Builder.Default
-	private PurchasesInformation purchasesInformation = PurchasesInformation.builder().build();;
+	private Long id;
+	private String login;
+	private String name;
+	private String email;
+	private String password;
+	private Instant registrationDate;
 }
