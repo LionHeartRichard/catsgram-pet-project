@@ -4,10 +4,10 @@ import lombok.Data;
 
 @Data
 public class UpdateUserRequest {
-	private String name;
-	private String email;
-	private String password;
-	private String login;
+	private final String name;
+	private final String email;
+	private final String password;
+	private final String login;
 
 	public boolean hasUsername() {
 		return !(name == null || name.isBlank());

@@ -8,6 +8,9 @@ import ru.yandex.practicum.catsgram.model.User;
 
 public class UserMapper {
 
+	private UserMapper() {
+	}
+
 	public static User mapToUser(NewUserRequest request) {
 		User user = new User();
 		user.setLogin(request.getLogin());
