@@ -17,7 +17,7 @@ public class UserRepository extends BaseRepository<User> {
 	private static final String FIND_BY_EMAIL_QUERY = "SELECT * FROM users WHERE email = ?";
 	private static final String FIND_BY_ID_QUERY = "SELECT * FROM users WHERE id = ?";
 	private static final String INSERT_QUERY = "INSERT INTO users(username, email, password, registration_date, login)"
-			+ "VALUES (?, ?, ?, ?, ?) returning id";
+			+ "VALUES (?, ?, ?, ?, ?) RETURNING id";
 	private static final String UPDATE_QUERY = "UPDATE users SET username = ?, email = ?, password = ? WHERE id = ?";
 
 	public UserRepository(JdbcTemplate jdbc, RowMapper<User> mapper) {
